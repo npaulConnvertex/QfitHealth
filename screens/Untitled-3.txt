@@ -1,0 +1,543 @@
+
+							<View
+								// config={config}
+								// onSwipeLeft={(state) => this.onSwipe(state, "left")}
+								// onSwipeRight={(state) => this.onSwipe(state, "right")}
+								style={{
+									flex: 1,
+									backgroundColor: this.state.backgroundColor
+								}}
+							>
+								{this.props.isLoading &&
+									<LoadingAnimation visible={this.props.isLoading} />
+								}
+								<TouchableWithoutFeedback
+									style={{ flex: 1 }} onPress={() => {
+										if (this.props.navigation.getParam("blur", false)) {
+											this.props.navigation.setParams({ blur: false });
+											this.setState({
+												activeRow: null,
+												activeRowEmployee: null,
+												longPressState: 'plus'
+											});
+										}
+									}
+									}>
+									<View style={[{ flex: 1 }, this.props.navigation.getParam("blur", false) ? {
+										backgroundColor: '#fff',
+										opacity: 0.1
+									} : {}]}>
+										<Modal
+											isVisible={this.state.employeeModalVisible}
+											animationIn={"fadeIn"}
+											animationOut={"fadeOut"}
+											animationInTiming={100}
+											animationOutTiming={10}
+											backdropTransitionInTiming={100}
+											backdropTransitionOutTiming={10}
+											swipeDirection={['up', 'down']}
+											hideModalContentWhileAnimating
+
+											onSwipeComplete={() => this.toggleEmployeeModal()}
+											onBackdropPress={() => this.toggleWithBackDrop()}
+											onBackButtonPress={() => this.toggleWithBackDrop()}
+											backdropColor={'#292929'}
+											backdropOpacity={0.4}
+											onModalHide={() => {
+											}}
+										>
+											{this.renderEmployeeModalContent()}
+										</Modal>
+
+										{this.renderTopRow(item.calDate)}
+										<ScrollView scrollEnabled={!this.props.navigation.getParam("blur", false)}>
+											<View style={styles.rowStyle1}>
+
+
+												<View style={{ flex: 1 }}>
+													{this.state.times.map((time, i) => (<View key={time} style={{
+														flex: 0,
+														height: i === 0 ? rowHeight + 5 : rowHeight,
+														width: '100%',
+														justifyContent: 'flex-end',
+														alignItems: 'center'
+													}}>
+														<Text
+															style={[{ fontSize: 10 }, moment().hours() === time.hours() && moment().isSame(moment(this.state.date), "day") ? { color: '#287F7E' } : {}, this.isRowActive(i + 1) ? styles.textStyle9 : {}]}>{time.format("HH:mm")}</Text>
+													</View>))}
+												</View>
+
+
+												<View
+													style={styles.boxContainer}>
+													{this.state.selectedMenuItem === 'Day' ?
+														<View style={styles.rowStyle1}>
+															{Object.values(this.state.employees).filter(e => e.isDone).map((employee, j) => (
+																<View key={employee.user.id}
+																	style={styles.rightBorder}>
+																	{this.state.times.map((time, i) => (i === 0 ?
+																		<TouchableOpacity activeOpacity={1} key={time}
+																			style={[{ height: rowHeight }, styles.touchableStyle1, this.isRowActive(i, j) ? styles.touchableStyle2 : styles.touchableStyle1]}
+																			onPress={() => {
+																				if (this.props.navigation.getParam("blur", false)) {
+																					this.props.navigation.setParams({ blur: false });
+																					this.setState({
+																						activeRow: null,
+																						activeRowEmployee: null,
+																						longPressState: 'plus'
+																					});
+																				}
+																			}}
+																			onLongPress={() => {
+																				this.setState({
+																					activeRow: i,
+																					activeRowEmployee: j,
+																					longPressState: 'closed-rows'
+																				});
+																				if (this.props.navigation.getParam("blur", false))
+																					this.props.navigation.setParams({ blur: false });
+																				else
+																					this.props.navigation.setParams({ blur: true });
+																			}}
+																		>
+																			{/* <ImageBackground
+                                                            source={require('./../assets/images/line-background.png')}
+                                                            style={{
+                                                                width: '100%',
+                                                                height: '100%',
+                                                            }} resizeMode={"cover"}>
+                                                            </ImageBackground> */}
+																		</TouchableOpacity> :
+																		<TouchableOpacity activeOpacity={1} key={time}
+																			style={[{ height: rowHeight }, styles.touchableStyle1, this.isRowActive(i, j) ? styles.touchableStyle2 : styles.touchableStyle1]}
+																			onPress={() => {
+																				if (!this.props.navigation.getParam("blur", false))
+																					this.props.navigation.navigate("SelectService", { time: time });
+																				else {
+																					this.props.navigation.setParams({ blur: false });
+																					this.setState({
+																						activeRow: null,
+																						activeRowEmployee: null,
+																						longPressState: 'plus'
+																					});
+																				}
+																			}}
+																			onLongPress={() => {
+																				this.setState({
+																					activeRow: i,
+																					activeRowEmployee: j,
+																					longPressState: 'hour-rows'
+																				});
+																				if (this.props.navigation.getParam("blur", false))
+																					this.props.navigation.setParams({ blur: false });
+																				else
+																					this.props.navigation.setParams({ blur: true });
+																			}}
+																		>
+																		</TouchableOpacity>))}
+																	<TouchableOpacity activeOpacity={1}
+																		style={[{ height: rowHeight / 2 }, styles.touchableStyle3, this.isRowActive(25, j) ? styles.touchableStyle4 : styles.touchableStyle3]}
+																		onPress={() => {
+																			if (this.props.navigation.getParam("blur", false)) {
+																				this.props.navigation.setParams({ blur: false });
+																				this.setState({
+																					activeRow: null,
+																					activeRowEmployee: null,
+																					longPressState: 'plus'
+																				});
+																			}
+																		}}
+																		onLongPress={() => {
+																			this.setState({
+																				activeRow: 25,
+																				activeRowEmployee: j,
+																				longPressState: 'closed-rows'
+																			});
+																			if (this.props.navigation.getParam("blur", false))
+																				this.props.navigation.setParams({ blur: false });
+																			else
+																				this.props.navigation.setParams({ blur: true });
+																		}}>
+																		<Image
+																			source={require('./../assets/images/line-background.png')}
+																			style={{
+																				width: '100%',
+																				height: '100%'
+																			}} resizeMode={"repeat"}>
+																		</Image>
+																	</TouchableOpacity>
+
+
+
+																	{/* OPENING TIME */}
+																	<TouchableOpacity
+																		activeOpacity={1}
+																		style={{
+																			width: '100%',
+																			height: this.state.openingHeight,
+																			zIndex: 4,
+																			position: 'absolute',
+																			top: 0,
+																			// backgroundColor: 'red',
+																		}}
+																	>
+																		<Image
+																			source={require('./../assets/images/line-background.png')}
+																			style={{
+																				width: '100%',
+																				height: this.state.openingHeight,
+																				zIndex: 4,
+																				position: 'absolute',
+																				top: 0,
+																				borderRadius: 1,
+																				// backgroundColor: 'blue',
+																			}} resizeMode={'cover'}>
+																		</Image>
+																	</TouchableOpacity>
+
+
+
+																	{/* CLOSING TIME */}
+																	<TouchableOpacity
+																		activeOpacity={1}
+																		style={{
+																			width: '100%',
+																			flexDirection: 'row',
+																			// borderRadius: 1,
+																			height: this.state.closingheight,
+																			zIndex: 8,
+																			backgroundColor: '#00000033',
+																			position: 'absolute',
+																			top: this.state.closingTopmargin,
+																		}}
+																	>
+																		<Image
+																			source={require('./../assets/images/line-background.png')}
+																			style={{
+																				width: '100%',
+																				borderRadius: 1,
+																				height: this.state.closingheight,
+																				zIndex: 20,
+																				position: 'absolute',
+																				// top: this.state.closingTopmargin,
+																				// backgroundColor: 'red',
+																			}} resizeMode={'cover'}>
+																		</Image>
+																	</TouchableOpacity>
+
+
+																	{
+
+																		this.state.availabilitySlots[employee.user.id] !== undefined && this.state.officehours !== undefined ?
+
+																			(
+
+																				this.state.availabilitySlots[employee.user.id].map((slot, index) =>
+																					<RenderAvailEvents
+																						rowHeight={rowHeight}
+																						selectedMenuItem={selectedMenuItem}
+																						minDuration={minDuration}
+																						times={times}
+																						allSlots={this.state.availabilitySlots}
+																						employeeid={employee.user.id}
+																						employees={this.state.employees}
+																						slot={slot}
+																						index={index}
+																						onPressEvent={() => {
+																							// console.log("BRAEKESLOTT", slot)
+																							this.props.navigation.navigate("AvailableSlotView",
+																								{ Breakdata: slot, deleteBreakIdCallback: this.deleteAvaialbleSlotId })
+																						}}
+																					/>
+																				)
+																			) : null
+																	}
+
+																	{
+																		this.state.slots[employee.user.id] !== undefined ? (
+																			this.state.slots[employee.user.id].map((slot, j) => this.renderEvents(slot, j, employee.user.id))
+																		) : null
+																	}
+
+
+
+																	{this.renderCurrentTime()}
+																</View>
+															))}
+														</View> : <View style={styles.rowStyle1}>
+															{Array.from(Array(viewNo), (_, j) => moment(this.state.date).add(j, "days")).map((day, j) => (
+
+																<View key={j}
+																	style={styles.rightBorder}>
+																	{this.state.times.map((time, i) => (i === 0 ?
+																		<TouchableOpacity activeOpacity={1} key={time}
+																			style={[{ height: rowHeight }, styles.touchableStyle1, this.isRowActive(i, j) ? styles.touchableStyle2 : styles.touchableStyle1]}
+																			onPress={() => {
+																				if (this.props.navigation.getParam("blur", false)) {
+																					this.props.navigation.setParams({ blur: false });
+																					this.setState({
+																						activeRow: null,
+																						activeRowEmployee: null,
+																						longPressState: 'plus'
+																					});
+																				}
+																			}}
+																			onLongPress={() => {
+																				this.setState({
+																					activeRow: i,
+																					activeRowEmployee: j,
+																					longPressState: 'closed-rows'
+																				});
+																				if (this.props.navigation.getParam("blur", false))
+																					this.props.navigation.setParams({ blur: false });
+																				else
+																					this.props.navigation.setParams({ blur: true });
+																			}}
+																		><ImageBackground
+																			source={require('./../assets/images/line-background.png')}
+																			style={{
+																				width: '100%',
+																				height: '100%'
+																			}} resizeMode={"cover"}>
+																			</ImageBackground>
+																		</TouchableOpacity> :
+																		<TouchableOpacity activeOpacity={1} key={time}
+																			style={[{ height: rowHeight }, styles.touchableStyle1, this.isRowActive(i, j) ? styles.touchableStyle2 : styles.touchableStyle1]}
+																			onPress={() => {
+																				if (!this.props.navigation.getParam("blur", false))
+																					this.props.navigation.navigate("SelectService", { time: time });
+																				else {
+																					this.props.navigation.setParams({ blur: false });
+																					this.setState({
+																						activeRow: null,
+																						activeRowEmployee: null,
+																						longPressState: 'plus'
+																					});
+																				}
+																			}}
+																			onLongPress={() => {
+																				this.setState({
+																					activeRow: i,
+																					activeRowEmployee: j,
+																					longPressState: 'hour-rows'
+																				});
+																				if (this.props.navigation.getParam("blur", false))
+																					this.props.navigation.setParams({ blur: false });
+																				else
+																					this.props.navigation.setParams({ blur: true });
+																			}}
+																		>
+																		</TouchableOpacity>))}
+																	<TouchableOpacity activeOpacity={1}
+																		style={[{ height: rowHeight / 2 }, styles.touchableStyle3, this.isRowActive(25, j) ? styles.touchableStyle4 : styles.touchableStyle3]}
+																		onPress={() => {
+																			if (this.props.navigation.getParam("blur", false)) {
+																				this.props.navigation.setParams({ blur: false });
+																				this.setState({
+																					activeRow: null,
+																					activeRowEmployee: null,
+																					longPressState: 'plus'
+																				});
+																			}
+																		}}
+																		onLongPress={() => {
+																			this.setState({
+																				activeRow: 25,
+																				activeRowEmployee: j,
+																				longPressState: 'closed-rows'
+																			});
+																			if (this.props.navigation.getParam("blur", false))
+																				this.props.navigation.setParams({ blur: false });
+																			else
+																				this.props.navigation.setParams({ blur: true });
+																		}}>
+																		<ImageBackground
+																			source={require('./../assets/images/line-background.png')}
+																			style={{
+																				width: '100%',
+																				height: '100%'
+																			}} resizeMode={"cover"}>
+																		</ImageBackground>
+																	</TouchableOpacity>
+
+
+
+
+																	{this.state.availabilitySlots[day.format("YYYY-MM-DD")] === undefined ? null : (
+																		this.state.availabilitySlots[day.format("YYYY-MM-DD")].map((slot, index) =>
+																			<RenderAvailEvents
+																				rowHeight={rowHeight}
+																				selectedMenuItem={selectedMenuItem}
+																				minDuration={minDuration}
+																				times={times}
+																				allSlots={this.state.availabilitySlots}
+																				employeeid={day.format("YYYY-MM-DD")}
+																				employees={this.state.employees}
+																				slot={slot}
+																				onPressEvent={() => {
+																					// console.log("BRAEKESLOTT", slot)
+																					this.props.navigation.navigate("AvailableSlotView",
+																						{ Breakdata: slot, deleteBreakIdCallback: this.deleteAvaialbleSlotId })
+																				}}
+																				index={index} />
+																		)
+																	)
+																	}
+
+
+
+																	{/* OPENING TIME */}
+																	<TouchableOpacity
+																		activeOpacity={1}
+																		style={{
+																			width: '100%',
+																			height: this.state.openHourMultipleDay[j].openheight,
+																			zIndex: 4,
+																			position: 'absolute',
+																			top: 0,
+																			// backgroundColor: 'red',
+																		}}
+																	>
+																		<Image
+																			source={require('./../assets/images/line-background.png')}
+																			style={{
+																				width: '100%',
+																				height: this.state.openHourMultipleDay[j].openheight,
+																				zIndex: 4,
+																				position: 'absolute',
+																				top: 0,
+																				borderRadius: 1,
+																				// backgroundColor: 'blue',
+																			}} resizeMode={'cover'}>
+																		</Image>
+																	</TouchableOpacity>
+
+
+
+
+																	{/* CLOSING TIME */}
+																	<TouchableOpacity
+																		activeOpacity={1}
+																		style={{
+																			width: '100%',
+																			flexDirection: 'row',
+																			// borderRadius: 1,
+																			height: this.state.openHourMultipleDay[j].closeheight,
+																			zIndex: 8,
+																			backgroundColor: '#00000033',
+																			position: 'absolute',
+																			top: this.state.openHourMultipleDay[j].topMargin,
+																		}}
+																	>
+																		<Image
+																			source={require('./../assets/images/line-background.png')}
+																			style={{
+																				width: '100%',
+																				borderRadius: 1,
+																				height: this.state.openHourMultipleDay[j].closeheight,
+																				zIndex: 20,
+																				position: 'absolute',
+																				// top: this.state.closingTopmargin,
+																				// backgroundColor: 'red',
+																			}} resizeMode={'cover'}>
+																		</Image>
+																	</TouchableOpacity>
+
+
+
+																	{/* (<View style={{ width: 100, height: 100, backgroundColor: 'red' }}><Text>Business Closed</Text></View>) */}
+																	{this.state.slots[day.format("YYYY-MM-DD")] === undefined ? null : (
+
+																		this.state.slots[day.format("YYYY-MM-DD")].map((slot, j) => this.renderEvents(slot, j, day.format("YYYY-MM-DD")))
+																	)}
+
+																</View>
+
+															))}
+															{this.renderCurrentTimeMultipleDays()}
+														</View>}
+												</View>
+											</View>
+										</ScrollView>
+									</View>
+								</TouchableWithoutFeedback>
+								{this.props.navigation.getParam("blur", false) ?
+									<View style={{ flex: 1, width: '100%', height: 150, position: 'absolute', bottom: 20, right: 20 }}>
+										{this.state.longPressState === 'closed-rows' ? <View
+											style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+											<View style={{ flex: 3 }} />
+											<View style={{ flex: 2, alignItems: 'flex-end' }}>
+												<Text style={styles.textStyle7}>Modify Opening Hours</Text>
+											</View>
+											<EleButton title={""}
+												icon={<Icon name={"pencil"} type={"regular"} size={18} color={"#287F7E"} />}
+												buttonStyle={styles.smallButtonStyle}
+												onPress={() => this.props.navigation.navigate("OpeningHours")}
+												containerStyle={{ flex: 1, alignItems: 'center' }}
+											/>
+										</View> : null}
+										{this.state.longPressState === 'closed-rows' || this.state.longPressState === 'plus' ? <View
+											style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+											<View style={{ flex: 3 }} />
+											<View style={{ flex: 2, alignItems: 'flex-end' }}>
+												<Text style={styles.textStyle7}>New Slot</Text>
+											</View>
+											<EleButton title={""}
+												icon={<Icon name={"expand"} type={"regular"} size={18} color={"#287F7E"} />}
+												buttonStyle={styles.smallButtonStyle}
+												onPress={() => {
+													this.props.navigation.setParams({ blur: false });
+													this.props.navigation.navigate("AddBreak", { page: 'slot' })
+												}}
+												containerStyle={{ flex: 1, alignItems: 'center' }}
+											/>
+										</View> : null}
+										{this.state.longPressState === 'hour-rows' || this.state.longPressState === 'plus' ?
+											<View style={{
+												flex: 1,
+												flexDirection: 'row',
+												justifyContent: 'flex-end',
+												alignItems: 'center'
+											}}>
+												<View style={{ flex: 3 }} />
+												<View style={{ flex: 2, alignItems: 'flex-end' }}>
+													<Text style={styles.textStyle7}>New Break</Text>
+												</View>
+												<EleButton title={""}
+													icon={<Icon name={"mug-hot"} type={"regular"} size={18} color={"#287F7E"} />}
+													buttonStyle={styles.smallButtonStyle}
+													onPress={() => {
+
+														this.props.navigation.setParams({ blur: false });
+														this.props.navigation.navigate('AddBreak', { page: 'break' })
+													}}
+													containerStyle={{ flex: 1, alignItems: 'center' }}
+												/>
+											</View> : null}
+										<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingTop: 6 }}>
+											<View style={{ flex: 3 }} />
+											<View style={{ flex: 2, alignItems: 'flex-end' }}>
+												<Text style={styles.textStyle7}>New Appointment</Text>
+											</View>
+											<EleButton title={""}
+												icon={<Icon name={"calendar-plus"} type={"solid"} size={20} color={"#FFFFFF"} />}
+												buttonStyle={styles.bigButtonStyle}
+												onPress={() => {
+													this.props.navigation.setParams({ blur: false });
+													this.props.navigation.navigate("SelectService")
+												}}
+												containerStyle={{ flex: 1, alignItems: 'center' }}
+											/>
+										</View>
+									</View> : null}
+								<View style={{
+									backgroundColor: '#fff',
+								}}>
+									<SnackBarComponent ref="ReactNativeSnackBar" />
+								</View>
+								{this.state.isConnected ? null :
+									<View style={styles.NetworkContainter}>
+										<Text style={styles.NetworkMessage}>No Internet Connection</Text>
+									</View>}
+
+							</View>

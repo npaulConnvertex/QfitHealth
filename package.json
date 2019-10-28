@@ -1,0 +1,63 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject",
+    "test": "node ./node_modules/jest/bin/jest.js --watchAll"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "@expo/samples": "2.1.1",
+    "@expo/vector-icons": "^10.0.5",
+    "@fortawesome/free-brands-svg-icons": "^5.8.2",
+    "@fortawesome/pro-light-svg-icons": "^5.8.2",
+    "@fortawesome/pro-regular-svg-icons": "^5.8.2",
+    "@fortawesome/pro-solid-svg-icons": "^5.8.2",
+    "axios": "^0.18.0",
+    "color": "~0.11.1",
+    "expo": "^35.0.0",
+    "expo-facebook": "^7.0.0",
+    "expo-font": "^7.0.0",
+    "expo-google-app-auth": "^7.0.0",
+    "expo-image-picker": "^7.0.0",
+    "expo-localization": "^7.0.0",
+    "libphonenumber-js": "^1.7.18",
+    "lodash": "^4.17.11",
+    "lottie-react-native": "^2.6.1",
+    "moment": "^2.24.0",
+    "native-base": "^2.12.1",
+    "phoenix": "^1.3.0",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
+    "react-native-animatable": "^1.3.3",
+    "react-native-color-palette": "^2.0.3",
+    "react-native-datepicker": "^1.7.2",
+    "react-native-easy-grid": "^0.2.1",
+    "react-native-elements": "^1.1.0",
+    "react-native-fontawesome-pro": "^2.1.0",
+    "react-native-gesture-handler": "^1.3.0",
+    "react-native-modal": "^11.0.1",
+    "react-native-phone-input": "^0.2.1",
+    "react-native-picker-select": "^6.1.0",
+    "react-native-popup-menu": "^0.15.6",
+    "react-native-reanimated": "^1.2.0",
+    "react-native-svg": "^9.9.5",
+    "react-native-svg-transformer": "^0.13.0",
+    "react-native-swipe-gestures": "^1.0.3",
+    "react-native-swiper": "^1.5.14",
+    "react-native-tab-view": "^2.5.0",
+    "react-navigation": "^3.0.9",
+    "react-redux": "^6.0.1",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "^5.0.0",
+    "jest-expo": "^32.0.0"
+  },
+  "private": true
+}
